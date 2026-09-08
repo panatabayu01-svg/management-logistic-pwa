@@ -1,0 +1,20 @@
+{
+  "id": "./",
+  "name": "Management Logistic",
+  "short_name": "Logistic",
+  "description": "Management Logistic PT. Panata Bayu Nugrah",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#123f7a",
+  "icons": [
+    {
+      "src": "./icons/Panata_Icon_192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#123f7a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Management Logistic">
+  <meta name="application-name" content="Management Logistic">
+
+  <title>Management Logistic</title>
+
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/Panata_Icon_192.png">
+  <link rel="apple-touch-icon" href="./icons/Panata_Icon_192.png">
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #ffffff;
+    }
+    #app {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: #ffffff;
+    }
+    #loading {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      z-index: 10;
+      font-family: Arial, sans-serif;
+      color: #123f7a;
+    }
+    #loading img {
+      width: 88px;
+      height: 88px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto 12px;
+    }
+    #loadingText {
+      text-align: center;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div id="loading">
+    <div>
+      <img src="./icons/Panata_Icon_192.png" alt="Panata">
+      <div id="loadingText">Membuka Management Logistic...</div>
+    </div>
+  </div>
+
+  <iframe
+    id="app"
+    title="Management Logistic"
+    src="https://script.google.com/macros/s/AKfycbzAooaW16rMO6Xnp2J6IfHn25GUEh8AA0s0Q7UApuwCGa72dfRmYj2ZSL4PGOTEv9TqGw/exec"
+    allow="clipboard-read; clipboard-write; fullscreen"
+    referrerpolicy="strict-origin-when-cross-origin">
+  </iframe>
+
+  <script>
+    const frame = document.getElementById('app');
+    const loading = document.getElementById('loading');
+
+    frame.addEventListener('load', function () {
+      loading.style.display = 'none';
+    });
+
+    // Service worker keeps the PWA shell available; the Apps Script
+    // application itself remains hosted by Google Apps Script.
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./service-worker.js').catch(function (err) {
+          console.warn('Service Worker:', err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
