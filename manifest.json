@@ -3,15 +3,26 @@
   "name": "Management Logistic",
   "short_name": "Management Logistic",
   "description": "Management Logistic PT. Panata Bayu Nugrah",
-  "start_url": "/management-logistic-pwa/",
+
+  "start_url": "/management-logistic-pwa/?v=20260910",
+
   "scope": "/management-logistic-pwa/",
+
   "display": "standalone",
+
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
+
   "orientation": "portrait",
+
   "background_color": "#ffffff",
   "theme_color": "#123f7a",
+
   "icons": [
     {
-      "src": "/management-logistic-pwa/Panata_Icon_192.png?v=20260909",
+      "src": "/management-logistic-pwa/Panata_Icon_192.png?v=20260910",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
