@@ -29,13 +29,13 @@
 <link
     rel="apple-touch-icon"
     sizes="180x180"
-    href="./Panata_Icon_192.png?v=20260910">
+    href="./Panata_Icon_192.png">
 
 <link
     rel="icon"
     type="image/png"
     sizes="192x192"
-    href="./Panata_Icon_192.png?v=20260910">
+    href="./Panata_Icon_192.png">
 
 <!-- MANIFEST -->
 <link
@@ -131,6 +131,11 @@
 
     </style>
 
+<link
+    rel="preload"
+    as="image"
+    href="./Panata_Icon_192.png">
+    
 </head>
 
 
@@ -140,9 +145,12 @@
 
 <img
     id="logo"
-    src="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20260909"
-    alt="Panata">
-
+    src="./Panata_Icon_192.png"
+    alt="Panata"
+    width="120"
+    height="120"
+    loading="eager"
+    decoding="async">
     <h2>Management Logistic</h2>
 
     <p id="status">
