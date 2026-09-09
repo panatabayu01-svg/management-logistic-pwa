@@ -43,7 +43,7 @@
 
 
     <!-- =========================================
-         ICON IOS / IPHONE
+         ICON IOS
     ========================================== -->
 
     <link
@@ -64,7 +64,7 @@
 
 
     <!-- =========================================
-         MANIFEST PWA
+         MANIFEST
     ========================================== -->
 
     <link
@@ -72,11 +72,43 @@
         href="./manifest.json">
 
 
+    <title>Management Logistic</title>
+
+
     <!-- =========================================
-         TITLE
+         STYLE
     ========================================== -->
 
-    <title>Management Logistic</title>
+    <style>
+
+        html,
+        body {
+
+            margin: 0;
+            padding: 0;
+
+            width: 100%;
+            height: 100%;
+
+            overflow: hidden;
+
+            background: #ffffff;
+
+        }
+
+
+        #appFrame {
+
+            display: block;
+
+            width: 100%;
+            height: 100%;
+
+            border: none;
+
+        }
+
+    </style>
 
 </head>
 
@@ -84,39 +116,17 @@
 <body>
 
 
-<script>
+    <!-- =========================================
+         MANAGEMENT LOGISTIC
+         GOOGLE APPS SCRIPT
+    ========================================== -->
 
-    /*
-    ==================================================
-    MANAGEMENT LOGISTIC
-    PWA WRAPPER
-    ==================================================
-    */
-
-    const APP_URL =
-        "https://script.google.com/macros/s/AKfycbzAooaW16rMO6Xnp2J6IfHn25GUEh8AA0s0Q7UApuwCGa72dfRmYj2ZSL4PGOTEv9TqGw/exec";
-
-
-    /*
-    ==================================================
-    REDIRECT KE GOOGLE APPS SCRIPT
-    ==================================================
-    */
-
-    window.location.replace(APP_URL);
-
-
-</script>
-
-
-<noscript>
-
-    <p>
-        JavaScript harus diaktifkan
-        untuk menjalankan Management Logistic.
-    </p>
-
-</noscript>
+    <iframe
+        id="appFrame"
+        src="https://script.google.com/macros/s/AKfycbzAooaW16rMO6Xnp2J6IfHn25GUEh8AA0s0Q7UApuwCGa72dfRmYj2ZSL4PGOTEv9TqGw/exec"
+        allow="fullscreen"
+        title="Management Logistic">
+    </iframe>
 
 
 </body>
