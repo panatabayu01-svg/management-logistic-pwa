@@ -19,30 +19,55 @@
 
     <meta name="apple-mobile-web-app-status-bar-style"
           content="default">
-<meta name="apple-mobile-web-app-title"
-      content="Management Logistic">
 
-<meta name="application-name"
-      content="Management Logistic">
+    <meta name="apple-mobile-web-app-title"
+          content="Management Logistic">
 
-<!-- ICON PANATA -->
-<link
-    rel="apple-touch-icon"
-    sizes="180x180"
-    href="./Panata_Icon_192.png">
+    <meta name="application-name"
+          content="Management Logistic">
 
-<link
-    rel="icon"
-    type="image/png"
-    sizes="192x192"
-    href="./Panata_Icon_192.png">
 
-<!-- MANIFEST -->
-<link
-    rel="manifest"
-    href="./manifest.json?v=20260910">
+    <!-- =====================================================
+         ICON PANATA
+         ===================================================== -->
 
-<title>Management Logistic</title>
+    <link
+        rel="apple-touch-icon"
+        sizes="180x180"
+        href="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png">
+
+    <link
+        rel="icon"
+        type="image/png"
+        sizes="192x192"
+        href="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png">
+
+
+    <!-- =====================================================
+         MANIFEST
+         ===================================================== -->
+
+    <link
+        rel="manifest"
+        href="./manifest.json?v=20260910">
+
+
+    <!-- =====================================================
+         PRELOAD LOGO
+         ===================================================== -->
+
+    <link
+        rel="preload"
+        as="image"
+        href="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png">
+
+
+    <title>Management Logistic</title>
+
+
+    <!-- =====================================================
+         STYLE
+         ===================================================== -->
 
     <style>
 
@@ -63,6 +88,7 @@
 
         }
 
+
         #loading {
 
             width: 100%;
@@ -80,6 +106,11 @@
 
         }
 
+
+        /* =================================================
+           LOGO
+           ================================================= */
+
         #logo {
 
             width: 120px;
@@ -89,7 +120,85 @@
 
             margin-bottom: 20px;
 
+            display: block;
+
         }
+
+
+        /* =================================================
+           FALLBACK LOGO
+           ================================================= */
+
+        #logoFallback {
+
+            width: 120px;
+            height: 120px;
+
+            margin-bottom: 20px;
+
+            display: none;
+
+            align-items: center;
+            justify-content: center;
+
+            flex-direction: column;
+
+            box-sizing: border-box;
+
+            border-radius: 18px;
+
+            background: #ffffff;
+
+            color: #123f7a;
+
+            font-size: 22px;
+
+            font-weight: bold;
+
+            border: 1px solid #e5e5e5;
+
+        }
+
+
+        #logoFallbackMark {
+
+            width: 48px;
+            height: 48px;
+
+            border-radius: 12px;
+
+            background: #123f7a;
+
+            color: #ffffff;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 28px;
+
+            font-weight: bold;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        #logoFallbackText {
+
+            font-size: 14px;
+
+            color: #123f7a;
+
+            font-weight: bold;
+
+        }
+
+
+        /* =================================================
+           TITLE
+           ================================================= */
 
         h2 {
 
@@ -99,6 +208,11 @@
 
         }
 
+
+        /* =================================================
+           STATUS
+           ================================================= */
+
         p {
 
             color: #666;
@@ -106,6 +220,11 @@
             margin-top: 10px;
 
         }
+
+
+        /* =================================================
+           BUTTON
+           ================================================= */
 
         #openApp {
 
@@ -131,54 +250,214 @@
 
     </style>
 
-<link
-    rel="preload"
-    as="image"
-    href="./Panata_Icon_192.png">
-    
 </head>
 
 
 <body>
 
+
 <div id="loading">
 
-<img
-    id="logo"
-    src="./Panata_Icon_192.png"
-    alt="Panata"
-    width="120"
-    height="120"
-    loading="eager"
-    decoding="async">
-    <h2>Management Logistic</h2>
+
+    <!-- =================================================
+         LOGO UTAMA
+         ================================================= -->
+
+    <img
+        id="logo"
+        src="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png"
+        alt=""
+        width="120"
+        height="120"
+        loading="eager"
+        decoding="async">
+
+
+    <!-- =================================================
+         FALLBACK
+         TIDAK AKAN MUNCUL KECUALI LOGO GAGAL TOTAL
+         ================================================= -->
+
+    <div id="logoFallback">
+
+        <div id="logoFallbackMark">
+            P
+        </div>
+
+        <div id="logoFallbackText">
+            Panata
+        </div>
+
+    </div>
+
+
+    <h2>
+        Management Logistic
+    </h2>
+
 
     <p id="status">
         Membuka aplikasi...
     </p>
 
+
     <button id="openApp">
         BUKA MANAGEMENT LOGISTIC
     </button>
+
 
 </div>
 
 
 <script>
 
+
+/* =========================================================
+   URL LOGO
+   ========================================================= */
+
+const LOGO_URLS = [
+
+    "https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png",
+
+    "./Panata_Icon_192.png",
+
+    "https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20260910"
+
+];
+
+
+/* =========================================================
+   ELEMENT LOGO
+   ========================================================= */
+
+const logo =
+    document.getElementById("logo");
+
+const logoFallback =
+    document.getElementById("logoFallback");
+
+
+/* =========================================================
+   STATUS LOGO
+   ========================================================= */
+
+let logoAttempt = 0;
+
+
+/* =========================================================
+   FUNGSI FALLBACK
+   ========================================================= */
+
+function tampilkanFallbackLogo() {
+
+    if (logo) {
+
+        logo.style.display = "none";
+
+    }
+
+    if (logoFallback) {
+
+        logoFallback.style.display = "flex";
+
+    }
+
+}
+
+
+/* =========================================================
+   RETRY LOGO
+   ========================================================= */
+
+function cobaLogoBerikutnya() {
+
+    if (!logo) {
+
+        return;
+
+    }
+
+
+    if (
+        logoAttempt >=
+        LOGO_URLS.length
+    ) {
+
+        tampilkanFallbackLogo();
+
+        return;
+
+    }
+
+
+    const url =
+        LOGO_URLS[logoAttempt];
+
+
+    logoAttempt++;
+
+
+    logo.onload = function () {
+
+        logo.style.display = "block";
+
+        if (logoFallback) {
+
+            logoFallback.style.display = "none";
+
+        }
+
+    };
+
+
+    logo.onerror = function () {
+
+        setTimeout(
+            function () {
+
+                cobaLogoBerikutnya();
+
+            },
+            700
+        );
+
+    };
+
+
+    logo.src = url;
+
+}
+
+
+/* =========================================================
+   MULAI LOAD LOGO
+   ========================================================= */
+
+cobaLogoBerikutnya();
+
+
+/* =========================================================
+   APP URL
+   ========================================================= */
+
 const APP_URL =
     "https://script.google.com/macros/s/AKfycbzAooaW16rMO6Xnp2J6IfHn25GUEh8AA0s0Q7UApuwCGa72dfRmYj2ZSL4PGOTEv9TqGw/exec";
 
-/*
-=========================================================
-DETEKSI MODE APLIKASI
-=========================================================
-*/
+
+/* =========================================================
+   DETEKSI iOS
+   ========================================================= */
 
 const isIOS =
     /iPhone|iPad|iPod/i.test(
         navigator.userAgent
     );
+
+
+/* =========================================================
+   DETEKSI STANDALONE
+   ========================================================= */
 
 const isStandalone =
     isIOS
@@ -188,47 +467,68 @@ const isStandalone =
         ).matches;
 
 
-/*
-=========================================================
-JIKA DIBUKA DARI ICON HOME SCREEN
-→ MASUK KE APPS SCRIPT
-=========================================================
-*/
+/* =========================================================
+   JIKA DIBUKA DARI HOME SCREEN
+   → MASUK KE APPS SCRIPT
+   ========================================================= */
 
 if (isStandalone) {
 
-    window.location.replace(APP_URL);
+    window.location.replace(
+        APP_URL
+    );
 
 }
 
 
-/*
-=========================================================
-JIKA DIBUKA DARI SAFARI
-→ TETAP DI GITHUB
-→ AGAR BISA ADD TO HOME SCREEN DENGAN ICON PANATA
-=========================================================
-*/
+/* =========================================================
+   JIKA DIBUKA DARI SAFARI
+   → TETAP DI GITHUB
+   ========================================================= */
 
 else {
 
-    document.getElementById("status").textContent =
-        "Tambahkan aplikasi ini ke Layar Utama untuk menggunakan Management Logistic.";
+    const status =
+        document.getElementById(
+            "status"
+        );
+
+
+    if (status) {
+
+        status.textContent =
+            "Tambahkan aplikasi ini ke Layar Utama untuk menggunakan Management Logistic.";
+
+    }
+
 
     const btn =
-        document.getElementById("openApp");
+        document.getElementById(
+            "openApp"
+        );
 
-    btn.style.display = "block";
 
-    btn.onclick = function () {
+    if (btn) {
 
-        window.location.href = APP_URL;
+        btn.style.display =
+            "block";
 
-    };
+
+        btn.onclick =
+            function () {
+
+                window.location.href =
+                    APP_URL;
+
+            };
+
+    }
 
 }
 
+
 </script>
+
 
 </body>
 
