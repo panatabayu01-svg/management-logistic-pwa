@@ -26,17 +26,17 @@
     <meta name="application-name"
           content="Management Logistic">
 
-    <!-- ICON PANATA -->
+<!-- ICON PANATA -->
 <link
     rel="apple-touch-icon"
     sizes="180x180"
-    href="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20260909">
+    href="./Panata_Icon_192.png?v=20260909">
 
 <link
     rel="icon"
     type="image/png"
     sizes="192x192"
-    href="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20260909">
+    href="./Panata_Icon_192.png?v=20260909">
 
     <!-- MANIFEST -->
     <link
@@ -162,18 +162,23 @@
 const APP_URL =
     "https://script.google.com/macros/s/AKfycbzAooaW16rMO6Xnp2J6IfHn25GUEh8AA0s0Q7UApuwCGa72dfRmYj2ZSL4PGOTEv9TqGw/exec";
 
-
 /*
 =========================================================
-DETEKSI APLIKASI YANG SUDAH DIPASANG DI HOME SCREEN
+DETEKSI MODE APLIKASI
 =========================================================
 */
 
+const isIOS =
+    /iPhone|iPad|iPod/i.test(
+        navigator.userAgent
+    );
+
 const isStandalone =
-    window.navigator.standalone === true ||
-    window.matchMedia(
-        "(display-mode: standalone)"
-    ).matches;
+    isIOS
+        ? window.navigator.standalone === true
+        : window.matchMedia(
+            "(display-mode: standalone)"
+        ).matches;
 
 
 /*
