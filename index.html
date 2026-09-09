@@ -18,6 +18,9 @@
     <meta name="theme-color"
           content="#123f7a">
 
+    <meta name="mobile-web-app-capable"
+          content="yes">
+
     <meta name="apple-mobile-web-app-capable"
           content="yes">
 
@@ -52,6 +55,12 @@
         href="./Panata_Icon_192.png">
 
 
+    <link
+        rel="shortcut icon"
+        type="image/png"
+        href="./Panata_Icon_192.png">
+
+
     <!-- =========================================
          MANIFEST
     ========================================== -->
@@ -63,44 +72,61 @@
 
     <title>Management Logistic</title>
 
+
+    <!-- =========================================
+         STYLE
+    ========================================== -->
+
+    <style>
+
+        html,
+        body {
+
+            margin: 0;
+            padding: 0;
+
+            width: 100%;
+            height: 100%;
+
+            overflow: hidden;
+
+            background: #ffffff;
+
+        }
+
+
+        #appFrame {
+
+            display: block;
+
+            width: 100%;
+            height: 100%;
+
+            border: 0;
+
+            margin: 0;
+            padding: 0;
+
+        }
+
+    </style>
+
 </head>
 
 
 <body>
 
-<script>
 
-    /*
-    ==================================================
-    MANAGEMENT LOGISTIC
-    PWA REDIRECT
-    ==================================================
-    */
+    <!-- =========================================
+         GOOGLE APPS SCRIPT
+    ========================================== -->
 
-    const APP_URL =
-        "https://script.google.com/macros/s/AKfycbzAooaW16rMO6Xnp2J6IfHn25GUEh8AA0s0Q7UApuwCGa72dfRmYj2ZSL4PGOTEv9TqGw/exec";
-
-
-    /*
-    ==================================================
-    REDIRECT LANGSUNG KE GOOGLE APPS SCRIPT
-    ==================================================
-    */
-
-    window.location.replace(APP_URL);
-
-
-</script>
-
-
-<noscript>
-
-    <p>
-        JavaScript harus diaktifkan
-        untuk menjalankan Management Logistic.
-    </p>
-
-</noscript>
+    <iframe
+        id="appFrame"
+        src="https://script.google.com/macros/s/AKfycbzAooaW16rMO6Xnp2J6IfHn25GUEh8AA0s0Q7UApuwCGa72dfRmYj2ZSL4PGOTEv9TqGw/exec"
+        allow="fullscreen"
+        allowfullscreen>
+    </iframe>
 
 
 </body>
