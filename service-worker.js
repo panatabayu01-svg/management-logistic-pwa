@@ -1,4 +1,4 @@
-const CACHE_NAME = 'management-logistic-pwa-v2';
+const CACHE_NAME = 'management-logistic-v3';
 
 const SHELL = [
   './',
