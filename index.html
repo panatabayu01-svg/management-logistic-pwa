@@ -112,37 +112,93 @@ p {
     </button>
 
 </div>
-
 <script>
-  const GAS_URL = "https://script.google.com/macros/s/AKfycbycR8eueJmxcDG-GDZ0THKKe1xftPC1Cp4FgTKyLiMKK4ZwM4fU6TDURzW6lBG8w8ouJQ/exec";
+
+const APP_URL =
+    "https://script.google.com/macros/s/AKfycbycR8eueJmxcDG-GDZ0THKKe1xftPC1Cp4FgTKyLiMKK4ZwM4fU6TDURzW6lBG8w8ouJQ/exec";
+
+
+//=========================================================
+// DETEKSI iOS
+//=========================================================
 
 const isIOS =
-    /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    /iPhone|iPad|iPod/i.test(
+        navigator.userAgent
+    );
+
+
+//=========================================================
+// DETEKSI PWA STANDALONE
+//=========================================================
 
 const isStandalone =
     isIOS
         ? window.navigator.standalone === true
-        : window.matchMedia("(display-mode: standalone)").matches;
+        : window.matchMedia(
+            "(display-mode: standalone)"
+          ).matches;
 
-if (isStandalone) {
-    window.location.replace(APP_URL);
-} else {
-    const status = document.getElementById("status");
-    const btn = document.getElementById("openApp");
 
-    if (status) {
+//=========================================================
+// ELEMENT
+//=========================================================
+
+const status =
+    document.getElementById("status");
+
+const btn =
+    document.getElementById("openApp");
+
+
+//=========================================================
+// JIKA SUDAH TERPASANG SEBAGAI APP
+// LANGSUNG BUKA GOOGLE APPS SCRIPT
+//=========================================================
+
+if(isStandalone){
+
+    window.location.replace(
+        APP_URL
+    );
+
+}
+
+
+//=========================================================
+// JIKA DIBUKA DARI BROWSER
+//=========================================================
+
+else{
+
+    if(status){
+
         status.textContent =
             "Tambahkan aplikasi ini ke Layar Utama untuk menggunakan Management Logistic.";
+
     }
 
-    if (btn) {
-        btn.style.display = "block";
-        btn.onclick = function() {
-            window.location.href = APP_URL;
-        };
+
+    if(btn){
+
+        btn.style.display =
+            "block";
+
+
+        btn.onclick =
+            function(){
+
+                //=================================================
+                // BUKA APLIKASI
+                //=================================================
+
+                window.location.href =
+                    APP_URL;
+
+            };
+
     }
+
 }
-</script>
 
-</body>
-</html>
+</script>
