@@ -177,7 +177,11 @@ p {
   }
 
   const GITHUB_DEVICE_ID = getGitHubDeviceId();
-  const APP_URL_WITH_DEVICE = APP_URL + "?mlDeviceId=" + encodeURIComponent(GITHUB_DEVICE_ID);
+  // Kirim ID melalui QUERY + FRAGMENT.
+// QUERY dipakai untuk Apps Script, FRAGMENT menjadi cadangan bila redirect
+// Apps Script tidak meneruskan query ke halaman HTML.
+const encodedDeviceId = encodeURIComponent(GITHUB_DEVICE_ID);
+const APP_URL_WITH_DEVICE = APP_URL + "?mlDeviceId=" + encodedDeviceId + "#mlDeviceId=" + encodedDeviceId;
 
 const isIOS =
     /iPhone|iPad|iPod/i.test(navigator.userAgent);
