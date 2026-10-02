@@ -122,19 +122,80 @@ p {
   const DEVICE_KEY = "ML_GITHUB1_DEVICE_ID_V1";
 
   // ID device disimpan di Link GitHub 1 dan diteruskan ke Apps Script.
+  // Penyimpanan dibuat berlapis agar ID APPROVED tidak berubah saat
+  // aplikasi dibuka ulang, termasuk pada HP/iPhone/PWA.
   function getGitHubDeviceId() {
+      const COOKIE_KEY = "ML_GITHUB1_DEVICE_ID_V1";
+
+      function readCookie() {
+          try {
+              const prefix = COOKIE_KEY + "=";
+              const parts = document.cookie ? document.cookie.split(";") : [];
+              for (let i = 0; i < parts.length; i++) {
+                  const item = parts[i].trim();
+                  if (item.indexOf(prefix) === 0) {
+                      return decodeURIComponent(item.substring(prefix.length));
+                  }
+              }
+          } catch (e) {}
+          return "";
+      }
+
+      function saveId(id) {
+          try {
+              localStorage.setItem(DEVICE_KEY, id);
+          } catch (e) {}
+
+          try {
+              document.cookie =
+                  COOKIE_KEY + "=" + encodeURIComponent(id) +
+                  "; path=/; max-age=31536000; SameSite=Lax; Secure";
+          } catch (e) {}
+      }
+
       try {
-          let id = localStorage.getItem(DEVICE_KEY);
-          if (id) return id;
+          // 1. Cookie GitHub diprioritaskan karena lebih tahan terhadap
+          // perbedaan storage antara Safari/iPhone/PWA.
+          let id = readCookie();
+          if (id) {
+              try { localStorage.setItem(DEVICE_KEY, id); } catch (e) {}
+              return id;
+          }
+
+          // 2. localStorage sebagai penyimpanan utama normal.
+          id = localStorage.getItem(DEVICE_KEY);
+          if (id) {
+              saveId(id);
+              return id;
+          }
+
+          // 3. Buat ID hanya jika benar-benar belum pernah ada.
           if (window.crypto && typeof window.crypto.randomUUID === "function") {
               id = window.crypto.randomUUID();
           } else {
               id = "DEV-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12);
           }
-          localStorage.setItem(DEVICE_KEY, id);
+
+          saveId(id);
           return id;
       } catch (e) {
-          return "DEV-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12);
+          // Jangan membuat ID baru berulang-ulang jika localStorage gagal.
+          let id = readCookie();
+          if (id) return id;
+
+          if (window.crypto && typeof window.crypto.randomUUID === "function") {
+              id = window.crypto.randomUUID();
+          } else {
+              id = "DEV-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12);
+          }
+
+          try {
+              document.cookie =
+                  COOKIE_KEY + "=" + encodeURIComponent(id) +
+                  "; path=/; max-age=31536000; SameSite=Lax; Secure";
+          } catch (ignore) {}
+
+          return id;
       }
   }
 
