@@ -119,6 +119,28 @@ p {
 <script>
   const APP_URL = "https://script.google.com/macros/s/AKfycbwZoMYrIgJYVKfUY7EQa4AY7eLaGtHqT_5r7y11OJC7_7mlst1SGRljTEl_ZJyq226wlA/exec";
 
+  const DEVICE_KEY = "ML_GITHUB1_DEVICE_ID_V1";
+
+  // ID device disimpan di Link GitHub 1 dan diteruskan ke Apps Script.
+  function getGitHubDeviceId() {
+      try {
+          let id = localStorage.getItem(DEVICE_KEY);
+          if (id) return id;
+          if (window.crypto && typeof window.crypto.randomUUID === "function") {
+              id = window.crypto.randomUUID();
+          } else {
+              id = "DEV-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12);
+          }
+          localStorage.setItem(DEVICE_KEY, id);
+          return id;
+      } catch (e) {
+          return "DEV-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12);
+      }
+  }
+
+  const GITHUB_DEVICE_ID = getGitHubDeviceId();
+  const APP_URL_WITH_DEVICE = APP_URL + "?mlDeviceId=" + encodeURIComponent(GITHUB_DEVICE_ID);
+
 const isIOS =
     /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
@@ -128,7 +150,7 @@ const isStandalone =
         : window.matchMedia("(display-mode: standalone)").matches;
 
 if (isStandalone) {
-    window.location.replace(APP_URL);
+    window.location.replace(APP_URL_WITH_DEVICE);
 } else {
     const status = document.getElementById("status");
     const btn = document.getElementById("openApp");
@@ -141,7 +163,7 @@ if (isStandalone) {
     if (btn) {
         btn.style.display = "block";
         btn.onclick = function() {
-            window.location.href = APP_URL;
+            window.location.href = APP_URL_WITH_DEVICE;
         };
     }
 }
