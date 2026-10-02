@@ -122,81 +122,58 @@ p {
   const DEVICE_KEY = "ML_GITHUB1_DEVICE_ID_V1";
 
   // ID device disimpan di Link GitHub 1 dan diteruskan ke Apps Script.
-  // Penyimpanan dibuat berlapis agar ID APPROVED tidak berubah saat
-  // aplikasi dibuka ulang, termasuk pada HP/iPhone/PWA.
+  // Prioritas: localStorage -> cookie -> buat ID baru.
+  // Cookie dipakai sebagai cadangan agar ID tetap sama pada HP/iPhone/PWA
+  // ketika localStorage tidak tersedia atau di-reset oleh browser.
   function getGitHubDeviceId() {
-      const COOKIE_KEY = "ML_GITHUB1_DEVICE_ID_V1";
+      const COOKIE_NAME = "ML_GITHUB1_DEVICE_ID_V1";
 
       function readCookie() {
           try {
-              const prefix = COOKIE_KEY + "=";
-              const parts = document.cookie ? document.cookie.split(";") : [];
-              for (let i = 0; i < parts.length; i++) {
-                  const item = parts[i].trim();
-                  if (item.indexOf(prefix) === 0) {
-                      return decodeURIComponent(item.substring(prefix.length));
-                  }
-              }
-          } catch (e) {}
-          return "";
+              const match = document.cookie.match(
+                  new RegExp("(?:^|; )" + COOKIE_NAME.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "=([^;]+)")
+              );
+              return match ? decodeURIComponent(match[1]) : "";
+          } catch (e) {
+              return "";
+          }
       }
 
-      function saveId(id) {
+      function saveCookie(id) {
           try {
-              localStorage.setItem(DEVICE_KEY, id);
-          } catch (e) {}
-
-          try {
-              document.cookie =
-                  COOKIE_KEY + "=" + encodeURIComponent(id) +
-                  "; path=/; max-age=31536000; SameSite=Lax; Secure";
+              document.cookie = COOKIE_NAME + "=" + encodeURIComponent(id) +
+                  "; path=/; max-age=31536000; SameSite=Lax";
           } catch (e) {}
       }
 
+      function newId() {
+          if (window.crypto && typeof window.crypto.randomUUID === "function") {
+              return window.crypto.randomUUID();
+          }
+          return "DEV-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12);
+      }
+
+      // 1. Coba localStorage.
       try {
-          // 1. Cookie GitHub diprioritaskan karena lebih tahan terhadap
-          // perbedaan storage antara Safari/iPhone/PWA.
-          let id = readCookie();
-          if (id) {
-              try { localStorage.setItem(DEVICE_KEY, id); } catch (e) {}
-              return id;
+          const stored = String(localStorage.getItem(DEVICE_KEY) || "").trim();
+          if (stored) {
+              saveCookie(stored);
+              return stored;
           }
+      } catch (e) {}
 
-          // 2. localStorage sebagai penyimpanan utama normal.
-          id = localStorage.getItem(DEVICE_KEY);
-          if (id) {
-              saveId(id);
-              return id;
-          }
-
-          // 3. Buat ID hanya jika benar-benar belum pernah ada.
-          if (window.crypto && typeof window.crypto.randomUUID === "function") {
-              id = window.crypto.randomUUID();
-          } else {
-              id = "DEV-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12);
-          }
-
-          saveId(id);
-          return id;
-      } catch (e) {
-          // Jangan membuat ID baru berulang-ulang jika localStorage gagal.
-          let id = readCookie();
-          if (id) return id;
-
-          if (window.crypto && typeof window.crypto.randomUUID === "function") {
-              id = window.crypto.randomUUID();
-          } else {
-              id = "DEV-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12);
-          }
-
-          try {
-              document.cookie =
-                  COOKIE_KEY + "=" + encodeURIComponent(id) +
-                  "; path=/; max-age=31536000; SameSite=Lax; Secure";
-          } catch (ignore) {}
-
-          return id;
+      // 2. Jika localStorage tidak tersedia, ambil dari cookie.
+      const cookieId = readCookie();
+      if (cookieId) {
+          try { localStorage.setItem(DEVICE_KEY, cookieId); } catch (e) {}
+          return cookieId;
       }
+
+      // 3. Hanya buat ID baru jika benar-benar belum ada.
+      const id = newId();
+      try { localStorage.setItem(DEVICE_KEY, id); } catch (e) {}
+      saveCookie(id);
+      return id;
   }
 
   const GITHUB_DEVICE_ID = getGitHubDeviceId();
