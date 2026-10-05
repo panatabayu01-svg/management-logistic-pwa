@@ -31,8 +31,7 @@
       sizes="192x192"
       href="./Panata_Icon_192.png">
 
-<link rel="manifest"
-      href="./manifest.json?v=20260910">
+<link rel="manifest" href="./manifest.json?v=20261005">
 
 <title>Management Logistic</title>
 
@@ -91,15 +90,6 @@ p {
 }
 </style>
 
-
-<!-- LINK 1 PWA SUPPORT — generated from original Index Github Link 1 -->
-<link rel="manifest" href="./manifest.json?v=20261005">
-<meta name="theme-color" content="#123f7a">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Management Logistic">
-<link rel="apple-touch-icon" sizes="192x192" href="./Panata_Icon_192.png">
 </head>
 
 <body>
@@ -222,88 +212,11 @@ if (isStandalone) {
 
 
 <script>
-/* LINK 1 PWA + DEVICE ID PATCH
-   Tidak mengubah tampilan. Hanya melengkapi instalasi PWA dan meneruskan device ID.
-*/
-(function () {
-  "use strict";
-
-  const ML_APP_URL = "https://script.google.com/macros/s/AKfycbwZoMYrIgJYVKfUY7EQa4AY7eLaGtHqT_5r7y11OJC7_7mlst1SGRljTEl_ZJyq226wlA/exec";
-  const ML_DEVICE_KEY = "ML_GITHUB1_DEVICE_ID_V2";
-  const ML_COOKIE = "ML_GITHUB1_DEVICE_ID_V2";
-
-  function getCookie(name) {
-    try {
-      const m = document.cookie.match(
-        new RegExp("(?:^|; )" + name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "=([^;]+)")
-      );
-      return m ? decodeURIComponent(m[1]) : "";
-    } catch (e) { return ""; }
-  }
-
-  function setCookie(name, value) {
-    try {
-      document.cookie = name + "=" + encodeURIComponent(value) +
-        "; path=/; max-age=31536000; SameSite=Lax";
-    } catch (e) {}
-  }
-
-  function newDeviceId() {
-    try {
-      if (crypto && crypto.randomUUID) return crypto.randomUUID();
-    } catch (e) {}
-    return "DEV-" + Date.now().toString(36) + "-" +
-      Math.random().toString(36).slice(2, 12);
-  }
-
-  function deviceId() {
-    let id = "";
-    try { id = localStorage.getItem(ML_DEVICE_KEY) || ""; } catch (e) {}
-    if (!id) id = getCookie(ML_COOKIE);
-    if (!id) id = newDeviceId();
-    try { localStorage.setItem(ML_DEVICE_KEY, id); } catch (e) {}
-    setCookie(ML_COOKIE, id);
-    return id;
-  }
-
-  function appUrl() {
-    return ML_APP_URL + "?mlDeviceId=" + encodeURIComponent(deviceId());
-  }
-
-  // Register service worker only on GitHub Pages/HTTPS.
-  if ("serviceWorker" in navigator && location.protocol === "https:") {
-    window.addEventListener("load", function () {
-      navigator.serviceWorker.register("./sw.js", {scope: "./"}).catch(function () {});
-    });
-  }
-
-  // PWA install prompt. Existing page controls/design remain untouched.
-  let deferredPrompt = null;
-  window.addEventListener("beforeinstallprompt", function (e) {
-    e.preventDefault();
-    deferredPrompt = e;
-    window.__ML_INSTALL_PROMPT__ = e;
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./sw.js", {scope:"./"}).catch(function(){});
   });
-
-  window.__ML_OPEN_APP__ = function () {
-    location.href = appUrl();
-  };
-
-  window.__ML_INSTALL_APP__ = async function () {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      try { await deferredPrompt.userChoice; } catch (e) {}
-      deferredPrompt = null;
-      return true;
-    }
-    location.href = appUrl();
-    return false;
-  };
-
-  // Expose the same destination for any existing button/function.
-  window.__ML_APP_URL__ = appUrl();
-})();
+}
 </script>
-
 </body>
 </html>
