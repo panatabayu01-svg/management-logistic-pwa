@@ -91,9 +91,7 @@ p {
 }
 </style>
 
-</head>
-
-<body>
+</head><body>
 
 <div id="loading">
 
@@ -116,112 +114,129 @@ p {
 
 </div>
 
+
 <script>
-  const APP_URL = "https://script.google.com/macros/s/AKfycbwZoMYrIgJYVKfUY7EQa4AY7eLaGtHqT_5r7y11OJC7_7mlst1SGRljTEl_ZJyq226wlA/exec";
+(() => {
+  "use strict";
 
-  const DEVICE_KEY = "ML_GITHUB1_DEVICE_ID_V1";
+  const APP_URL =
+    "https://script.google.com/macros/s/AKfycbwZoMYrIgJYVKfUY7EQa4AY7eLaGtHqT_5r7y11OJC7_7mlst1SGRljTEl_ZJyq226wlA/exec";
 
-  // ID device disimpan di Link GitHub 1 dan diteruskan ke Apps Script.
-  // Prioritas: localStorage -> cookie -> buat ID baru.
-  // Cookie dipakai sebagai cadangan agar ID tetap sama pada HP/iPhone/PWA
-  // ketika localStorage tidak tersedia atau di-reset oleh browser.
-  function getGitHubDeviceId() {
-      const COOKIE_NAME = "ML_GITHUB1_DEVICE_ID_V1";
+  const DEVICE_KEY = "ML_GITHUB1_DEVICE_ID_V2";
+  const COOKIE_NAME = "ML_GITHUB1_DEVICE_ID_V2";
 
-      function readCookie() {
-          try {
-              const match = document.cookie.match(
-                  new RegExp("(?:^|; )" + COOKIE_NAME.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "=([^;]+)")
-              );
-              return match ? decodeURIComponent(match[1]) : "";
-          } catch (e) {
-              return "";
-          }
-      }
-
-      function saveCookie(id) {
-          try {
-              document.cookie = COOKIE_NAME + "=" + encodeURIComponent(id) +
-                  "; path=/; max-age=31536000; SameSite=Lax";
-          } catch (e) {}
-      }
-
-      function newId() {
-          if (window.crypto && typeof window.crypto.randomUUID === "function") {
-              return window.crypto.randomUUID();
-          }
-          return "DEV-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12);
-      }
-
-      // 1. Coba localStorage.
-      try {
-          const stored = String(localStorage.getItem(DEVICE_KEY) || "").trim();
-          if (stored) {
-              saveCookie(stored);
-              return stored;
-          }
-      } catch (e) {}
-
-      // 2. Jika localStorage tidak tersedia, ambil dari cookie.
-      const cookieId = readCookie();
-      if (cookieId) {
-          try { localStorage.setItem(DEVICE_KEY, cookieId); } catch (e) {}
-          return cookieId;
-      }
-
-      // 3. Hanya buat ID baru jika benar-benar belum ada.
-      const id = newId();
-      try { localStorage.setItem(DEVICE_KEY, id); } catch (e) {}
-      saveCookie(id);
-      return id;
+  function readCookie() {
+    try {
+      const m = document.cookie.match(
+        new RegExp("(?:^|; )" + COOKIE_NAME.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "=([^;]+)")
+      );
+      return m ? decodeURIComponent(m[1]) : "";
+    } catch (_) {
+      return "";
+    }
   }
 
-  const GITHUB_DEVICE_ID = getGitHubDeviceId();
-  // Kirim ID melalui QUERY + FRAGMENT.
-// QUERY dipakai untuk Apps Script, FRAGMENT menjadi cadangan bila redirect
-// Apps Script tidak meneruskan query ke halaman HTML.
-const encodedDeviceId = encodeURIComponent(GITHUB_DEVICE_ID);
-const APP_URL_WITH_DEVICE = APP_URL + "?mlDeviceId=" + encodedDeviceId + "#mlDeviceId=" + encodedDeviceId;
-
-const isIOS =
-    /iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-const isStandalone =
-    isIOS
-        ? window.navigator.standalone === true
-        : window.matchMedia("(display-mode: standalone)").matches;
-
-// PWA FIX V1.1:
-// Jangan langsung memindahkan window PWA ke script.google.com saat
-// aplikasi dibuka dari Home Screen. Pada iPhone/iPad, navigasi langsung
-// dari mode standalone dapat membuka halaman Google Drive error.
-// Apps Script dibuka sebagai halaman browser terpisah agar konteks browser
-// tetap normal, sementara ID DEVICE tetap diteruskan.
-function bukaManagementLogistic() {
+  function saveCookie(id) {
     try {
-        const win = window.open(APP_URL_WITH_DEVICE, "_blank");
-        if (!win) {
-            window.location.href = APP_URL_WITH_DEVICE;
-        }
-    } catch (e) {
-        window.location.href = APP_URL_WITH_DEVICE;
+      document.cookie =
+        COOKIE_NAME + "=" + encodeURIComponent(id) +
+        "; path=/; max-age=31536000; SameSite=Lax";
+    } catch (_) {}
+  }
+
+  function makeId() {
+    try {
+      if (window.crypto && typeof window.crypto.randomUUID === "function") {
+        return window.crypto.randomUUID();
+      }
+    } catch (_) {}
+    return "DEV-" + Date.now().toString(36) + "-" +
+           Math.random().toString(36).slice(2, 12);
+  }
+
+  function getDeviceId() {
+    try {
+      const id = String(localStorage.getItem(DEVICE_KEY) || "").trim();
+      if (id) {
+        saveCookie(id);
+        return id;
+      }
+    } catch (_) {}
+
+    const cookieId = readCookie();
+    if (cookieId) {
+      try { localStorage.setItem(DEVICE_KEY, cookieId); } catch (_) {}
+      return cookieId;
     }
-}
 
-const status = document.getElementById("status");
-const btn = document.getElementById("openApp");
+    const id = makeId();
+    try { localStorage.setItem(DEVICE_KEY, id); } catch (_) {}
+    saveCookie(id);
+    return id;
+  }
 
-if (status) {
-    status.textContent = isStandalone
-        ? "Management Logistic siap dibuka."
-        : "Tambahkan aplikasi ini ke Layar Utama untuk menggunakan Management Logistic.";
-}
+  const deviceId = getDeviceId();
+  const url = APP_URL + "?mlDeviceId=" + encodeURIComponent(deviceId);
 
-if (btn) {
+  const status = document.getElementById("status");
+  const btn = document.getElementById("openApp");
+
+  const standalone =
+    window.matchMedia &&
+    window.matchMedia("(display-mode: standalone)").matches;
+
+  const iosStandalone = window.navigator.standalone === true;
+
+  // Register service worker untuk GitHub Pages agar PWA dapat bekerja lebih stabil.
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js", { scope: "./" }).catch(() => {});
+    });
+  }
+
+  let deferredInstallPrompt = null;
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+
+    if (!standalone && !iosStandalone && btn) {
+      btn.textContent = "INSTALL / BUKA APLIKASI";
+      btn.style.display = "block";
+    }
+  });
+
+  async function openApp() {
+    window.location.href = url;
+  }
+
+  if (standalone || iosStandalone) {
+    // Jika Link 1 benar-benar dibuka dari Home Screen/PWA, langsung ke aplikasi.
+    window.location.replace(url);
+    return;
+  }
+
+  if (status) {
+    status.textContent =
+      "Management Logistic siap dibuka. Untuk pengalaman seperti aplikasi, " +
+      "tambahkan halaman ini ke Layar Utama.";
+  }
+
+  if (btn) {
     btn.style.display = "block";
-    btn.textContent = "BUKA MANAGEMENT LOGISTIC";
-    btn.onclick = bukaManagementLogistic;
-}
+    btn.onclick = async () => {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        try {
+          await deferredInstallPrompt.userChoice;
+        } catch (_) {}
+        deferredInstallPrompt = null;
+        return;
+      }
+      openApp();
+    };
+  }
+})();
 </script>
 
 </body>
