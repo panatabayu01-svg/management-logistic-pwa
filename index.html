@@ -191,28 +191,36 @@ const isStandalone =
         ? window.navigator.standalone === true
         : window.matchMedia("(display-mode: standalone)").matches;
 
+// PWA FIX V1.1:
+// Jangan langsung memindahkan window PWA ke script.google.com saat
+// aplikasi dibuka dari Home Screen. Pada iPhone/iPad, navigasi langsung
+// dari mode standalone dapat membuka halaman Google Drive error.
+// Apps Script dibuka sebagai halaman browser terpisah agar konteks browser
+// tetap normal, sementara ID DEVICE tetap diteruskan.
+function bukaManagementLogistic() {
+    try {
+        const win = window.open(APP_URL_WITH_DEVICE, "_blank");
+        if (!win) {
+            window.location.href = APP_URL_WITH_DEVICE;
+        }
+    } catch (e) {
+        window.location.href = APP_URL_WITH_DEVICE;
+    }
+}
+
 const status = document.getElementById("status");
 const btn = document.getElementById("openApp");
 
-if (isStandalone) {
-    // Jangan memaksa PWA standalone pindah domain ke script.google.com
-    // dengan location.replace(). Pada iPhone hal ini dapat membuka
-    // halaman Google Drive error di dalam mode PWA.
-    if (status) {
-        status.textContent = "Management Logistic siap digunakan.";
-    }
-} else {
-    if (status) {
-        status.textContent =
-            "Tambahkan aplikasi ini ke Layar Utama untuk menggunakan Management Logistic.";
-    }
+if (status) {
+    status.textContent = isStandalone
+        ? "Management Logistic siap dibuka."
+        : "Tambahkan aplikasi ini ke Layar Utama untuk menggunakan Management Logistic.";
 }
 
 if (btn) {
     btn.style.display = "block";
-    btn.onclick = function() {
-        window.open(APP_URL_WITH_DEVICE, "_blank", "noopener,noreferrer");
-    };
+    btn.textContent = "BUKA MANAGEMENT LOGISTIC";
+    btn.onclick = bukaManagementLogistic;
 }
 </script>
 
