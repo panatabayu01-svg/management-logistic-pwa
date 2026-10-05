@@ -31,7 +31,8 @@
       sizes="192x192"
       href="./Panata_Icon_192.png">
 
-<link rel="manifest" href="./manifest.json?v=20261005">
+<link rel="manifest"
+      href="./manifest.json?v=20260910">
 
 <title>Management Logistic</title>
 
@@ -180,7 +181,12 @@ p {
 // QUERY dipakai untuk Apps Script, FRAGMENT menjadi cadangan bila redirect
 // Apps Script tidak meneruskan query ke halaman HTML.
 const encodedDeviceId = encodeURIComponent(GITHUB_DEVICE_ID);
-const APP_URL_WITH_DEVICE = APP_URL + "?mlDeviceId=" + encodedDeviceId + "#mlDeviceId=" + encodedDeviceId;
+
+// ANDROID CHROME FIX:
+// Apps Script menerima Device ID melalui QUERY saja.
+// Fragment (#...) dihapus agar URL redirect tetap bersih di Android Chrome.
+const APP_URL_WITH_DEVICE =
+    APP_URL + "?mlDeviceId=" + encodedDeviceId;
 
 const isIOS =
     /iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -191,7 +197,7 @@ const isStandalone =
         : window.matchMedia("(display-mode: standalone)").matches;
 
 if (isStandalone) {
-    window.location.replace(APP_URL_WITH_DEVICE);
+    window.location.assign(APP_URL_WITH_DEVICE);
 } else {
     const status = document.getElementById("status");
     const btn = document.getElementById("openApp");
@@ -204,19 +210,11 @@ if (isStandalone) {
     if (btn) {
         btn.style.display = "block";
         btn.onclick = function() {
-            window.location.href = APP_URL_WITH_DEVICE;
+            window.location.assign(APP_URL_WITH_DEVICE);
         };
     }
 }
 </script>
 
-
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function () {
-    navigator.serviceWorker.register("./sw.js", {scope:"./"}).catch(function(){});
-  });
-}
-</script>
 </body>
 </html>
