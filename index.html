@@ -14,20 +14,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Management Logistic">
 <meta name="application-name" content="Management Logistic">
-<!-- SHARE PREVIEW: SAMA DENGAN LINK 2 -->
-<meta property="og:type" content="website">
-<meta property="og:title" content="STOK MATERIAL PROYEK AKTIF">
-<meta property="og:description" content="Management Logistic Monitoring">
-<meta property="og:image" content="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20261005">
-<meta property="og:image:secure_url" content="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20261005">
-<meta property="og:image:type" content="image/png">
-<meta property="og:image:width" content="192">
-<meta property="og:image:height" content="192">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="STOK MATERIAL PROYEK AKTIF">
-<meta name="twitter:description" content="Management Logistic Monitoring">
-<meta name="twitter:image" content="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20261005">
-
 
 <!--
   LOGO HOME SCREEN
@@ -38,16 +24,29 @@
 
 <link rel="apple-touch-icon"
       sizes="180x180"
-      href="./Panata_Icon_192.png">
+      href="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20261006">
 
 <link rel="icon"
       type="image/png"
       sizes="192x192"
-      href="./Panata_Icon_192.png">
+      href="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20261006">
 
 <link rel="manifest"
       href="./manifest.json?v=20260910">
 
+<!-- SHARE PREVIEW — SAMA UNTUK LINK 1 & LINK 2 -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="STOK MATERIAL PROYEK AKTIF">
+<meta property="og:description" content="Monitoring — Shared Snapshot">
+<meta property="og:image" content="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20261006">
+<meta property="og:image:secure_url" content="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20261006">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="192">
+<meta property="og:image:height" content="192">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="STOK MATERIAL PROYEK AKTIF">
+<meta name="twitter:description" content="Monitoring — Shared Snapshot">
+<meta name="twitter:image" content="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20261006">
 <title>Management Logistic</title>
 
 <style>
@@ -132,6 +131,13 @@ p {
 
 <script>
   const APP_URL = "https://script.google.com/macros/s/AKfycbwZoMYrIgJYVKfUY7EQa4AY7eLaGtHqT_5r7y11OJC7_7mlst1SGRljTEl_ZJyq226wlA/exec";
+
+  // SHARE SNAPSHOT: jika URL GitHub berisi ?s=TOKEN, langsung teruskan
+  // token snapshot ke Apps Script. Mode normal Link 1 tetap tidak berubah.
+  const SHARE_TOKEN = new URLSearchParams(window.location.search).get("s");
+  if (SHARE_TOKEN) {
+      window.location.replace(APP_URL + "?s=" + encodeURIComponent(SHARE_TOKEN));
+  }
 
   const DEVICE_KEY = "ML_GITHUB1_DEVICE_ID_V1";
 
