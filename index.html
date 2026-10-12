@@ -139,6 +139,8 @@ p {
       window.location.replace(APP_URL + "?s=" + encodeURIComponent(SHARE_TOKEN));
   }
 
+  // Jangan jalankan redirect aplikasi utama jika link membawa token snapshot.
+  if (!SHARE_TOKEN) {
   const DEVICE_KEY = "ML_GITHUB1_DEVICE_ID_V1";
 
   // ID device disimpan di Link GitHub 1 dan diteruskan ke Apps Script.
@@ -234,6 +236,8 @@ if (isStandalone) {
         };
     }
 }
+
+  } // akhir mode aplikasi normal; mode share hanya diarahkan ke snapshot.
 </script>
 
 </body>
