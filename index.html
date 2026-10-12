@@ -216,7 +216,7 @@ const isStandalone =
         ? window.navigator.standalone === true
         : window.matchMedia("(display-mode: standalone)").matches;
 
-if (isStandalone) {a
+if (isStandalone) {
     window.location.assign(APP_URL_WITH_DEVICE);
 } else {
     const status = document.getElementById("status");
