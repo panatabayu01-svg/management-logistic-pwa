@@ -14,6 +14,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Management Logistic">
 <meta name="application-name" content="Management Logistic">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="msapplication-TileColor" content="#123f7a">
+<meta name="msapplication-TileImage" content="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20261005">
 
 <!--
   LOGO HOME SCREEN
@@ -22,22 +25,20 @@
   tidak tergantung request PNG ke GitHub.
 -->
 
-<link rel="apple-touch-icon"
-      sizes="180x180"
-      href="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20261006">
+<link rel="apple-touch-icon" sizes="180x180" href="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20261005">
 
-<link rel="icon"
-      type="image/png"
-      sizes="192x192"
-      href="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20261006">
+<link rel="icon" type="image/png" sizes="192x192" href="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20261005">
+<link rel="shortcut icon" type="image/png" href="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20261005">
+<title>Management Logistic</title>
 
-<link rel="manifest"
-      href="./manifest.json?v=20260910">
-
-<!-- SHARE PREVIEW — SAMA UNTUK LINK 1 & LINK 2 -->
+<!-- =====================================================
+     SHARE PREVIEW WHATSAPP / FACEBOOK / TELEGRAM
+     LINK 2
+     ===================================================== -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="STOK MATERIAL PROYEK AKTIF">
 <meta property="og:description" content="Monitoring — Shared Snapshot">
+<meta property="og:url" content="https://panatabayu01-svg.github.io/management-logistic-monitoring/">
 <meta property="og:image" content="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20261006">
 <meta property="og:image:secure_url" content="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20261006">
 <meta property="og:image:type" content="image/png">
@@ -47,7 +48,6 @@
 <meta name="twitter:title" content="STOK MATERIAL PROYEK AKTIF">
 <meta name="twitter:description" content="Monitoring — Shared Snapshot">
 <meta name="twitter:image" content="https://panatabayu01-svg.github.io/management-logistic-pwa/Panata_Icon_192.png?v=20261006">
-<title>Management Logistic</title>
 
 <style>
 html, body {
@@ -130,83 +130,49 @@ p {
 </div>
 
 <script>
-  const APP_URL = "https://script.google.com/a/*/macros/s/AKfycbwZoMYrIgJYVKfUY7EQa4AY7eLaGtHqT_5r7y11OJC7_7mlst1SGRljTEl_ZJyq226wlA/exec";
+  // LINK 2: mode=baru
+  // Dashboard + Monitoring PO & Supplier disembunyikan.
+  // Sumber data tetap menggunakan aplikasi yang sama.
+  //
+  // PENTING:
+  // GitHub dan Apps Script berada pada origin berbeda. Karena itu ID DEVICE
+  // harus dibuat/diambil di GitHub lalu dikirim ke Apps Script setiap kali
+  // aplikasi dibuka. Dengan cara ini ID DEVICE tetap sama setelah APPROVED
+  // dan popup registrasi tidak muncul lagi.
+  const APP_BASE_URL = "https://script.google.com/a/*/macros/s/AKfycbwZoMYrIgJYVKfUY7EQa4AY7eLaGtHqT_5r7y11OJC7_7mlst1SGRljTEl_ZJyq226wlA/exec";
 
-  // SHARE SNAPSHOT: jika URL GitHub berisi ?s=TOKEN, langsung teruskan
-  // token snapshot ke Apps Script. Mode normal Link 1 tetap tidak berubah.
+  // SHARE SNAPSHOT: jika URL GitHub berisi ?s=TOKEN, jangan jalankan
+  // registrasi/device normal. Teruskan langsung ke snapshot Apps Script.
   const SHARE_TOKEN = new URLSearchParams(window.location.search).get("s");
   if (SHARE_TOKEN) {
-      window.location.replace(APP_URL + "?s=" + encodeURIComponent(SHARE_TOKEN));
+      window.location.replace(APP_BASE_URL + "?s=" + encodeURIComponent(SHARE_TOKEN));
   }
+  const DEVICE_KEY = "ML_USER_ONLINE_DEVICE_ID_V1";
 
-  const DEVICE_KEY = "ML_GITHUB1_DEVICE_ID_V1";
+  function getLink2DeviceId() {
+      try {
+          let id = String(localStorage.getItem(DEVICE_KEY) || "").trim();
 
-  // ID device disimpan di Link GitHub 1 dan diteruskan ke Apps Script.
-  // Prioritas: localStorage -> cookie -> buat ID baru.
-  // Cookie dipakai sebagai cadangan agar ID tetap sama pada HP/iPhone/PWA
-  // ketika localStorage tidak tersedia atau di-reset oleh browser.
-  function getGitHubDeviceId() {
-      const COOKIE_NAME = "ML_GITHUB1_DEVICE_ID_V1";
+          if (!id) {
+              if (window.crypto && typeof window.crypto.randomUUID === "function") {
+                  id = window.crypto.randomUUID();
+              } else {
+                  id = "DEV-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12);
+              }
 
-      function readCookie() {
-          try {
-              const match = document.cookie.match(
-                  new RegExp("(?:^|; )" + COOKIE_NAME.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "=([^;]+)")
-              );
-              return match ? decodeURIComponent(match[1]) : "";
-          } catch (e) {
-              return "";
+              localStorage.setItem(DEVICE_KEY, id);
           }
-      }
 
-      function saveCookie(id) {
-          try {
-              document.cookie = COOKIE_NAME + "=" + encodeURIComponent(id) +
-                  "; path=/; max-age=31536000; SameSite=Lax";
-          } catch (e) {}
-      }
-
-      function newId() {
-          if (window.crypto && typeof window.crypto.randomUUID === "function") {
-              return window.crypto.randomUUID();
-          }
+          return id;
+      } catch (e) {
           return "DEV-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12);
       }
-
-      // 1. Coba localStorage.
-      try {
-          const stored = String(localStorage.getItem(DEVICE_KEY) || "").trim();
-          if (stored) {
-              saveCookie(stored);
-              return stored;
-          }
-      } catch (e) {}
-
-      // 2. Jika localStorage tidak tersedia, ambil dari cookie.
-      const cookieId = readCookie();
-      if (cookieId) {
-          try { localStorage.setItem(DEVICE_KEY, cookieId); } catch (e) {}
-          return cookieId;
-      }
-
-      // 3. Hanya buat ID baru jika benar-benar belum ada.
-      const id = newId();
-      try { localStorage.setItem(DEVICE_KEY, id); } catch (e) {}
-      saveCookie(id);
-      return id;
   }
 
-  const GITHUB_DEVICE_ID = getGitHubDeviceId();
-  // Kirim ID melalui QUERY + FRAGMENT.
-// QUERY dipakai untuk Apps Script, FRAGMENT menjadi cadangan bila redirect
-// Apps Script tidak meneruskan query ke halaman HTML.
-const encodedDeviceId = encodeURIComponent(GITHUB_DEVICE_ID);
-
-// ANDROID CHROME FIX:
-// Apps Script menerima Device ID melalui QUERY saja.
-// Fragment (#...) dihapus agar URL redirect tetap bersih di Android Chrome.
-const APP_URL_WITH_DEVICE =
-    APP_URL + "?mlDeviceId=" + encodedDeviceId;
+  const LINK2_DEVICE_ID = getLink2DeviceId();
+  const APP_URL =
+      APP_BASE_URL +
+      "?mode=baru&mlDeviceId=" + encodeURIComponent(LINK2_DEVICE_ID);
 
 const isIOS =
     /iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -217,7 +183,7 @@ const isStandalone =
         : window.matchMedia("(display-mode: standalone)").matches;
 
 if (isStandalone) {
-    window.location.assign(APP_URL_WITH_DEVICE);
+    window.location.replace(APP_URL);
 } else {
     const status = document.getElementById("status");
     const btn = document.getElementById("openApp");
@@ -230,7 +196,7 @@ if (isStandalone) {
     if (btn) {
         btn.style.display = "block";
         btn.onclick = function() {
-            window.location.assign(APP_URL_WITH_DEVICE);
+            window.location.href = APP_URL;
         };
     }
 }
